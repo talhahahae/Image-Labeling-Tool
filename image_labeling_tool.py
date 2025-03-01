@@ -104,13 +104,32 @@ class ImageLabelingTool:
         if label:
             self.label_listbox.insert(tk.END, label)
     
-    def start_annotation(self, event):
-        self.current_annotation = [event.x, event.y]
-    
-    def draw_annotation(self, event):
-        self.canvas.delete("temp_rect")
+    def start_annotation(self, event): #Handles the start of drawing based on the selected tool."""
+        if self.tool == "Point":
+            x, y = event.x, event.y
+            self.canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="red", tags="annotation")
+            annotation = {"label": self.get_selected_label(), "type": "Point", "coordinates": (x, y)}
+            self.save_annotation(annotation)
+        elif self.tool in ["Rectangle", "Circle"]:
+            self.current_annotation = [event.x, event.y]
+        elif self.tool == "Polygon":
+            if not hasattr(self, 'polygon_points'):
+                self.polygon_points = []
+            self.polygon_points.append((event.x, event.y))
+            if len(self.polygon_points) > 1:
+                self.canvas.create_line(self.polygon_points[-2], self.polygon_points[-1], fill="yellow", tags="annotation")
+        
+    def draw_annotation(self, event): #"""Updates the shape preview while dragging."""
+        self.canvas.delete("temp_shape")
         x0, y0 = self.current_annotation
-        self.canvas.create_rectangle(x0, y0, event.x, event.y, outline="red", tags="temp_rect")
+        x1, y1 = event.x, event.y
+
+        if self.tool == "Rectangle":
+            self.canvas.create_rectangle(x0, y0, x1, y1, outline="red", tags="temp_shape")
+        elif self.tool == "Circle":
+            r = ((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5  # Radius
+            self.canvas.create_oval(x0 - r, y0 - r, x0 + r, y0 + r, outline="blue", tags="temp_shape")
+
     
     def end_annotation(self, event):
         x0, y0 = self.current_annotation
@@ -125,7 +144,12 @@ class ImageLabelingTool:
         selected = self.annotation_listbox.curselection()
         if selected:
             self.annotation_listbox.delete(selected[0])
-    
+
+    def save_annotation(self, annotation): #"""Saves the annotation and updates the listbox."""
+        img_path = self.image_list[self.current_image_index]
+        self.annotations.setdefault(img_path, []).append(annotation)
+        self.annotation_listbox.insert(tk.END, f"{annotation['label']} - {annotation['type']}: {annotation['coordinates']}")
+        
     def save_annotations(self):
         if self.current_image_index is None:
             messagebox.showwarning("Warning", "No image selected!")
@@ -135,7 +159,7 @@ class ImageLabelingTool:
         with open(json_filename, "w") as f:
             json.dump(self.annotations.get(self.image_list[self.current_image_index], []), f, indent=4)
         messagebox.showinfo("Success", f"Annotations saved to {json_filename}")
-    
+        
     def zoom_image(self, event):
         scale = 1.1 if event.delta > 0 else 0.9
         self.zoom_factor *= scale
