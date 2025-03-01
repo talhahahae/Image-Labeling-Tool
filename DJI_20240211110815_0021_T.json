@@ -3,30 +3,40 @@
         "label": "Unknown",
         "type": "Rectangle",
         "coordinates": [
-            187,
-            69,
-            256,
-            151
-        ]
-    },
-    {
-        "label": "solar panel",
-        "type": "Rectangle",
-        "coordinates": [
-            202,
-            98,
-            202,
-            98
-        ]
-    },
-    {
-        "label": "solar panel",
-        "type": "Rectangle",
-        "coordinates": [
-            202,
-            98,
-            252,
+            64,
+            76,
+            107,
             146
+        ]
+    },
+    {
+        "label": "sch",
+        "type": "Rectangle",
+        "coordinates": [
+            150,
+            72,
+            200,
+            143
+        ]
+    },
+    {
+        "label": "sch",
+        "type": "Circle",
+        "coordinates": [
+            367,
+            240,
+            365,
+            267
+        ]
+    },
+    {
+        "label": "sch",
+        "type": "Circle",
+        "coordinates": [
+            422,
+            271,
+            468,
+            326
         ]
     }
 ]
