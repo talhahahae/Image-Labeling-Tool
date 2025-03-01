@@ -1,0 +1,32 @@
+[
+    {
+        "label": "Unknown",
+        "type": "Rectangle",
+        "coordinates": [
+            187,
+            69,
+            256,
+            151
+        ]
+    },
+    {
+        "label": "solar panel",
+        "type": "Rectangle",
+        "coordinates": [
+            202,
+            98,
+            202,
+            98
+        ]
+    },
+    {
+        "label": "solar panel",
+        "type": "Rectangle",
+        "coordinates": [
+            202,
+            98,
+            252,
+            146
+        ]
+    }
+]
